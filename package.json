@@ -1,0 +1,43 @@
+{
+  "name": "shift-reatom-delivery",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint \"src/**/*.{js,mjs,cjs,ts,mts,jsx,tsx}\" --fix && lint:styles",
+    "lint:styles": "stylelint \"src/**/*.css\" --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\" ",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@mantine/core": "^9.2.1",
+    "@mantine/hooks": "^9.2.1",
+    "@reatom/core": "^1001.0.0",
+    "@reatom/react": "^1001.0.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
+  },
+  "devDependencies": {
+    "@siberiacancode/apicraft": "^1.11.1",
+    "@siberiacancode/eslint": "^2.16.13",
+    "@siberiacancode/prettier": "^1.6.1",
+    "eslint": "^9.39.4",
+    "@eslint/js": "^9.39.4",
+    "@types/node": "^24.12.3",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "eslint-plugin-react-component-name": "^0.1.0",
+    "postcss": "^8.5.15",
+    "postcss-preset-mantine": "^1.18.0",
+    "postcss-simple-vars": "^7.0.1",
+    "stylelint": "^17.12.0",
+    "stylelint-config-standard": "^40.0.0",
+    "stylelint-order": "^8.1.1",
+    "typescript": "~6.0.2",
+    "vite": "^8.0.12",
+    "vite-plugin-svgr": "^5.2.0"
+  }
+}

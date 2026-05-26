@@ -1,0 +1,951 @@
+openapi: 3.0.0
+info:
+  title: juniors bootcamp backend 🔥
+  description: Апи для выполнения индивидуальных заданий
+  version: '1.0'
+  contact: {}
+tags: []
+servers:
+  - url: ''
+paths:
+  /api/otps:
+    get:
+      operationId: AppController_otps
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      summary: страница с отп кодами
+      tags:
+        - pages
+  /api/auth/otp:
+    post:
+      operationId: OtpsController_createOtp
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOtpDto'
+      responses:
+        '200':
+          description: create otp
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OtpResponse'
+      summary: Создание отп кода
+      tags:
+        - ☄️ otps
+  /api/users/signin:
+    post:
+      operationId: UsersController_signin
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignInDto'
+      responses:
+        '200':
+          description: signin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignInResponse'
+      summary: Авторизация
+      tags:
+        - 💂‍♂️ users
+  /api/users/profile:
+    patch:
+      operationId: UsersController_updateProfile
+      parameters:
+        - name: authorization
+          in: header
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileDto'
+      responses:
+        '200':
+          description: update profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateProfileResponse'
+      security:
+        - bearer: []
+      summary: Обновить профиль пользователя
+      tags:
+        - 💂‍♂️ users
+  /api/users/session:
+    get:
+      operationId: UsersController_session
+      parameters:
+        - name: authorization
+          in: header
+          schema:
+            type: string
+      responses:
+        '200':
+          description: session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionResponse'
+      security:
+        - bearer: []
+      summary: Получить сессию пользователя
+      tags:
+        - 💂‍♂️ users
+  /api/delivery/points:
+    get:
+      operationId: DeliveryController_getPoints
+      parameters: []
+      responses:
+        '200':
+          description: points
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliveryPointsResponse'
+      summary: Получить пункты выдачи
+      tags:
+        - 📦 delivery
+  /api/delivery/package/types:
+    get:
+      operationId: DeliveryController_getPackageTypes
+      parameters: []
+      responses:
+        '200':
+          description: package types
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliveryPackageTypesResponse'
+      summary: Получить типы посылок
+      tags:
+        - 📦 delivery
+  /api/delivery/calc:
+    post:
+      operationId: DeliveryController_calculateDelivery
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CalculateDeliveryDto'
+      responses:
+        '200':
+          description: calc
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalculateDeliveryResponse'
+      summary: Расчет доставки
+      tags:
+        - 📦 delivery
+  /api/delivery/order:
+    post:
+      operationId: DeliveryController_createOrder
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDeliveryOrderDto'
+      responses:
+        '200':
+          description: order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliverResponse'
+      summary: Создание заявки доставки
+      tags:
+        - 📦 delivery
+  /api/delivery/orders:
+    get:
+      operationId: DeliveryController_getDeliveries
+      parameters:
+        - name: authorization
+          in: header
+          schema:
+            type: string
+      responses:
+        '200':
+          description: orders
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliveryOrdersResponse'
+      security:
+        - bearer: []
+      summary: Получить все заявки на доставку
+      tags:
+        - 📦 delivery
+  /api/delivery/orders/{orderId}:
+    get:
+      operationId: DeliveryController_getDelivery
+      parameters:
+        - name: orderId
+          required: true
+          in: path
+          description: Идентификатор доставки
+          schema:
+            type: string
+        - name: authorization
+          in: header
+          schema:
+            type: string
+      responses:
+        '200':
+          description: order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliveryOrderResponse'
+      security:
+        - bearer: []
+      summary: Получить заявку на доставку
+      tags:
+        - 📦 delivery
+  /api/delivery/orders/cancel:
+    put:
+      operationId: DeliveryController_cancelDeliveryOrder
+      parameters:
+        - name: authorization
+          in: header
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelDeliveryOrderDto'
+      responses:
+        '200':
+          description: order cancel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+      security:
+        - bearer: []
+      summary: Отменить доставку
+      tags:
+        - 📦 delivery
+components:
+  securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+  schemas:
+    CreateOtpDto:
+      type: object
+      properties:
+        phone:
+          type: string
+          example: '89990009999'
+      required:
+        - phone
+    OtpResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Статус запроса
+        reason:
+          type: string
+          description: Причина ошибки
+        retryDelay:
+          type: number
+          example: 120000
+          description: Время запроса повторного отп кода в мс
+      required:
+        - success
+        - retryDelay
+    SignInDto:
+      type: object
+      properties:
+        phone:
+          type: string
+          example: '89990009999'
+          description: Номер телефона
+        code:
+          type: number
+          example: 345231
+          description: Отп код
+      required:
+        - phone
+        - code
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID пользователя
+        phone:
+          type: string
+          example: '89990009999'
+          description: Номер телефона
+        firstname:
+          type: string
+          example: firstname
+          description: Имя
+        middlename:
+          type: string
+          example: middlename
+          description: Отчество
+        lastname:
+          type: string
+          example: lastname
+          description: Фамилия
+        email:
+          type: string
+          example: email@gmail.com
+          description: Почта
+        city:
+          type: string
+          example: city
+          description: Город
+      required:
+        - _id
+        - phone
+    SignInResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Статус запроса
+        reason:
+          type: string
+          description: Причина ошибки
+        user:
+          description: Пользователь
+          allOf:
+            - $ref: '#/components/schemas/User'
+        token:
+          type: string
+          description: Пользовательский токен
+      required:
+        - success
+        - user
+        - token
+    UpdateProfileProfileDto:
+      type: object
+      properties:
+        firstname:
+          type: string
+          example: firstname
+          description: Имя
+        middlename:
+          type: string
+          example: middlename
+          description: Отчество
+        lastname:
+          type: string
+          example: lastname
+          description: Фамилия
+        email:
+          type: string
+          example: email@gmail.com
+          description: Почта
+        city:
+          type: string
+          example: city
+          description: Город
+    UpdateProfileDto:
+      type: object
+      properties:
+        profile:
+          description: Данные пользователя
+          allOf:
+            - $ref: '#/components/schemas/UpdateProfileProfileDto'
+        phone:
+          type: string
+          example: '89990009999'
+          description: Номер телефона
+      required:
+        - profile
+        - phone
+    UpdateProfileResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Статус запроса
+        reason:
+          type: string
+          description: Причина ошибки
+        user:
+          description: Пользователь
+          allOf:
+            - $ref: '#/components/schemas/User'
+      required:
+        - success
+        - user
+    SessionResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Статус запроса
+        reason:
+          type: string
+          description: Причина ошибки
+        user:
+          description: Пользователь
+          allOf:
+            - $ref: '#/components/schemas/User'
+      required:
+        - success
+        - user
+    BaseResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Статус запроса
+        reason:
+          type: string
+          description: Причина ошибки
+      required:
+        - success
+    DeliveryPoint:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '1'
+          description: Индентификатор пункта
+        name:
+          type: string
+          example: name
+          description: Название пункта
+        latitude:
+          type: number
+          example: latitude
+          description: Широта
+        longitude:
+          type: number
+          example: longitude
+          description: Долгота
+      required:
+        - id
+        - name
+        - latitude
+        - longitude
+    DeliveryPointsResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Статус запроса
+        reason:
+          type: string
+          description: Причина ошибки
+        points:
+          description: Пункты доставки
+          type: array
+          items:
+            $ref: '#/components/schemas/DeliveryPoint'
+      required:
+        - success
+        - points
+    DeliveryPackageType:
+      type: object
+      properties:
+        id:
+          type: string
+          example: envelope
+          description: Индентификатор типа посылки
+        name:
+          type: string
+          example: name
+          description: Название типа посылки
+        length:
+          type: number
+          example: length
+          description: Длина посылки
+        width:
+          type: number
+          example: width
+          description: Ширина посылки
+        weight:
+          type: number
+          example: weight
+          description: Длина посылки
+        height:
+          type: number
+          example: length
+          description: Высота посылки
+      required:
+        - id
+        - name
+        - length
+        - width
+        - weight
+        - height
+    DeliveryPackageTypesResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Статус запроса
+        reason:
+          type: string
+          description: Причина ошибки
+        packages:
+          description: 'Типы '
+          type: array
+          items:
+            $ref: '#/components/schemas/DeliveryPackageType'
+      required:
+        - success
+        - packages
+    CalculateDeliveryPackageDto:
+      type: object
+      properties:
+        length:
+          type: number
+          example: 10
+          description: Длина посылки
+        width:
+          type: number
+          example: 10
+          description: Ширина посылки
+        weight:
+          type: number
+          example: 10
+          description: Длина посылки
+        height:
+          type: number
+          example: 10
+          description: Высота посылки
+      required:
+        - length
+        - width
+        - weight
+        - height
+    CalculateDeliveryPointDto:
+      type: object
+      properties:
+        latitude:
+          type: number
+          example: 56.8389
+          description: Широта
+        longitude:
+          type: number
+          example: 60.6057
+          description: Долгота
+      required:
+        - latitude
+        - longitude
+    CalculateDeliveryDto:
+      type: object
+      properties:
+        package:
+          description: Поссылка
+          allOf:
+            - $ref: '#/components/schemas/CalculateDeliveryPackageDto'
+        senderPoint:
+          description: Город отправки
+          allOf:
+            - $ref: '#/components/schemas/CalculateDeliveryPointDto'
+        receiverPoint:
+          description: Город получения
+          allOf:
+            - $ref: '#/components/schemas/CalculateDeliveryPointDto'
+      required:
+        - package
+        - senderPoint
+        - receiverPoint
+    DeliveryOption:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '1'
+          description: Индентификатор опции доставки
+        price:
+          type: number
+          example: 10000
+          description: Цена доставки в копейках
+        days:
+          type: number
+          example: 2
+          description: Количество дней доставки
+        name:
+          type: string
+          example: name
+          description: Название опции отправки
+        type:
+          type: string
+          example: type
+          description: Тип доставки
+          enum:
+            - DEFAULT
+            - EXPRESS
+      required:
+        - id
+        - price
+        - days
+        - name
+        - type
+    CalculateDeliveryResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Статус запроса
+        reason:
+          type: string
+          description: Причина ошибки
+        options:
+          description: Опции доставки
+          type: array
+          items:
+            $ref: '#/components/schemas/DeliveryOption'
+      required:
+        - success
+        - options
+    CreateDeliveryOrderSenderAddressDto:
+      type: object
+      properties:
+        street:
+          type: string
+          example: street
+          description: Улица
+        house:
+          type: string
+          example: house
+          description: Номер дома
+        apartment:
+          type: string
+          example: apartment
+          description: Номер квартиры
+        comment:
+          type: string
+          example: comment
+          description: Комментарий
+      required:
+        - street
+        - house
+        - apartment
+    CreateDeliveryOrderPersonDto:
+      type: object
+      properties:
+        firstname:
+          type: string
+          example: firstname
+          description: Имя
+        lastname:
+          type: string
+          example: lastname
+          description: Фамилия
+        middlename:
+          type: string
+          example: middlename
+          description: Отчество
+        phone:
+          type: string
+          example: '89990009999'
+          description: Телефон
+      required:
+        - firstname
+        - lastname
+        - phone
+    CreateDeliveryOrderReceiverAddressDto:
+      type: object
+      properties:
+        street:
+          type: string
+          example: street
+          description: Улица
+        house:
+          type: string
+          example: house
+          description: Номер дома
+        apartment:
+          type: string
+          example: apartment
+          description: Номер квартиры
+        comment:
+          type: string
+          example: comment
+          description: Комментарий
+        isNonContact:
+          type: boolean
+          description: Бесконтактная доставка
+      required:
+        - street
+        - house
+        - apartment
+    CreateDeliveryOrderDto:
+      type: object
+      properties:
+        packageId:
+          type: string
+          description: Идентификатор типа посылки
+        optionType:
+          type: string
+          description: Тип заказа
+          enum:
+            - DEFAULT
+            - EXPRESS
+        senderPointId:
+          type: string
+          description: Идентификатор города отправки
+        senderAddress:
+          description: Адрес отправителя
+          allOf:
+            - $ref: '#/components/schemas/CreateDeliveryOrderSenderAddressDto'
+        sender:
+          description: Отправитель
+          allOf:
+            - $ref: '#/components/schemas/CreateDeliveryOrderPersonDto'
+        receiverPointId:
+          type: string
+          description: Идентификатор города получения
+        receiverAddress:
+          description: Адрес получателя
+          allOf:
+            - $ref: '#/components/schemas/CreateDeliveryOrderReceiverAddressDto'
+        receiver:
+          description: Получатель
+          allOf:
+            - $ref: '#/components/schemas/CreateDeliveryOrderPersonDto'
+        payer:
+          type: string
+          description: Кто будет оплачивать
+          enum:
+            - RECEIVER
+            - SENDER
+      required:
+        - packageId
+        - optionType
+        - senderPointId
+        - senderAddress
+        - sender
+        - receiverPointId
+        - receiverAddress
+        - receiver
+        - payer
+    DeliverySenderAddress:
+      type: object
+      properties:
+        street:
+          type: string
+          example: street
+          description: Улица
+        house:
+          type: string
+          example: house
+          description: Номер дома
+        apartment:
+          type: string
+          example: apartment
+          description: Номер квартиры
+        comment:
+          type: string
+          example: comment
+          description: Комментарий
+      required:
+        - street
+        - house
+        - apartment
+        - comment
+    DeliveryPerson:
+      type: object
+      properties:
+        firstname:
+          type: string
+          example: firstname
+          description: Имя
+        lastname:
+          type: string
+          example: lastname
+          description: Фамилия
+        middlename:
+          type: string
+          example: middlename
+          description: Отчество
+        phone:
+          type: string
+          example: '89990009999'
+          description: Телефон
+      required:
+        - firstname
+        - lastname
+        - middlename
+        - phone
+    DeliveryReceiverAddress:
+      type: object
+      properties:
+        street:
+          type: string
+          example: street
+          description: Улица
+        house:
+          type: string
+          example: house
+          description: Номер дома
+        apartment:
+          type: string
+          example: apartment
+          description: Номер квартиры
+        comment:
+          type: string
+          example: comment
+          description: Комментарий
+        isNonContact:
+          type: boolean
+          description: Бесконтактная доставка
+      required:
+        - street
+        - house
+        - apartment
+        - comment
+    DeliveryOrder:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID заказа
+        price:
+          type: number
+          description: Цена доставки
+        package:
+          description: Тип посылки
+          allOf:
+            - $ref: '#/components/schemas/DeliveryPackageType'
+        option:
+          type: string
+          description: Тип доставки
+          enum:
+            - DEFAULT
+            - EXPRESS
+        senderPoint:
+          description: Город отправки
+          allOf:
+            - $ref: '#/components/schemas/DeliveryPoint'
+        senderAddress:
+          description: Адрес отправителя
+          allOf:
+            - $ref: '#/components/schemas/DeliverySenderAddress'
+        sender:
+          description: Отправитель
+          allOf:
+            - $ref: '#/components/schemas/DeliveryPerson'
+        receiverPoint:
+          description: Город получения
+          allOf:
+            - $ref: '#/components/schemas/DeliveryPoint'
+        receiverAddress:
+          description: Адрес получателя
+          allOf:
+            - $ref: '#/components/schemas/DeliveryReceiverAddress'
+        receiver:
+          description: Получатель
+          allOf:
+            - $ref: '#/components/schemas/DeliveryPerson'
+        payer:
+          type: string
+          description: Кто будет оплачивать
+          enum:
+            - RECEIVER
+            - SENDER
+        status:
+          type: number
+          description: Статус доставки
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+        cancellable:
+          type: boolean
+          description: Статус отмены
+      required:
+        - _id
+        - price
+        - package
+        - option
+        - senderPoint
+        - senderAddress
+        - sender
+        - receiverPoint
+        - receiverAddress
+        - receiver
+        - payer
+        - status
+        - cancellable
+    DeliverResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Статус запроса
+        reason:
+          type: string
+          description: Причина ошибки
+        order:
+          description: Доставка
+          allOf:
+            - $ref: '#/components/schemas/DeliveryOrder'
+      required:
+        - success
+        - order
+    DeliveryOrdersResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Статус запроса
+        reason:
+          type: string
+          description: Причина ошибки
+        orders:
+          description: Доставки
+          type: array
+          items:
+            $ref: '#/components/schemas/DeliveryOrder'
+      required:
+        - success
+        - orders
+    DeliveryOrderResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Статус запроса
+        reason:
+          type: string
+          description: Причина ошибки
+        order:
+          description: Доставка
+          allOf:
+            - $ref: '#/components/schemas/DeliveryOrder'
+      required:
+        - success
+        - order
+    CancelDeliveryOrderDto:
+      type: object
+      properties:
+        orderId:
+          type: string
+          description: Идентификатор доставки
+      required:
+        - orderId

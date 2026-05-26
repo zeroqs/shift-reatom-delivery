@@ -1,5 +1,9 @@
 import { lazy } from 'react';
 
-export const Login = lazy(() =>
-  import('./Login/Login').then((module) => ({ default: module.Login }))
+export const PhoneLoginPage = lazy(() =>
+  import('./(auth)/Phone/Phone').then((module) => ({ default: module.Phone }))
 );
+export const CodeConfirmPage = lazy(() =>
+  import('./(auth)/Code/Code').then((module) => ({ default: module.Code }))
+);
+export const Home = lazy(() => import('./Home/Home').then((module) => ({ default: module.Home })));

@@ -1,7 +1,9 @@
-import { loginRoute } from './featureRoutes';
+import { homeRoute, loginConfirmRoute, loginRoute } from './featureRoutes';
 import { rootRoute } from './internal';
 
 export const router = {
   root: rootRoute,
-  login: loginRoute
+  login: loginRoute,
+  loginConfirm: loginConfirmRoute,
+  home: homeRoute
 };

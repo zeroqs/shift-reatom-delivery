@@ -1,1 +1,2 @@
-export { rootRoute } from './layoutRoutes';
+export * from './featureRoutes';
+export * from './layoutRoutes';

@@ -1,0 +1,22 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 8px;
+
+  padding: 20px 12px;
+
+  border: 1px solid var(--mantine-primary-color-filled);
+  border-radius: 35px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.action {
+  border-radius: 20px !important;
+}

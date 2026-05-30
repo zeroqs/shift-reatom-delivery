@@ -61,42 +61,41 @@ export const phoneForm = reatomForm(
   }
 );
 
-export const loginForm = reatomForm(
-  {
-    code: ''
-  },
-  {
-    schema: otpSchema,
-    keepErrorOnChange: false,
-    onSubmit: async ({ code }) => {
-      const phone = phoneField();
+export const createLoginForm = () =>
+  reatomForm(
+    {
+      code: ''
+    },
+    {
+      schema: otpSchema,
+      keepErrorOnChange: false,
+      onSubmit: async ({ code }) => {
+        const phone = phoneField();
 
-      try {
-        const authResponse = await wrap(
-          postApiUsersSignin({ body: { phone, code: Number(code) } })
-        );
+        try {
+          const authResponse = await wrap(
+            postApiUsersSignin({ body: { phone, code: Number(code) } })
+          );
 
-        if (authResponse.data.success) {
-          tokenAtom.set(authResponse.data.token);
-          userAtom.set(authResponse.data.user);
-          router.home.go();
-        } else {
-          showErrorNotification(authResponse.data.reason);
+          if (!authResponse.data.success) showErrorNotification(authResponse.data.reason);
+          else {
+            tokenAtom.set(authResponse.data.token);
+            userAtom.set(authResponse.data.user);
+            router.home.go();
+          }
+
+          return authResponse.data;
+        } catch (error) {
+          console.error(error);
+          if (error instanceof ResponseError) {
+            showErrorNotification(error.response.data.reason);
+
+            return error.response.data;
+          }
         }
-
-        return authResponse.data;
-      } catch (error) {
-        if (error instanceof ResponseError) {
-          showErrorNotification(error.response.data.reason);
-
-          return error.response.data;
-        }
-
-        throw error;
       }
     }
-  }
-);
+  );
 
 export type LoginPhoneForm = typeof phoneForm;
-export type LoginForm = typeof loginForm;
+export type LoginForm = ReturnType<typeof createLoginForm>;

@@ -1,7 +1,8 @@
 import { reatomRoute } from '@reatom/core';
 
 import { router } from '.';
-import { isAuthenticated } from '../user.model';
+import { Layout } from '../layouts';
+import { isAuthenticated, userAtom } from '../user.model';
 
 export const rootRoute = reatomRoute(
   {
@@ -20,11 +21,10 @@ export const authenticatedRoute = rootRoute.reatomRoute(
         router.login.go(undefined, true);
         return null;
       }
-      return {};
+      return { user: userAtom() };
     },
-
     layout: true,
-    render: (self) => <>{self.outlet()}</>
+    render: (self) => <Layout>{self.outlet()}</Layout>
   },
   'protectedRoute'
 );

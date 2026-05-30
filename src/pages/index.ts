@@ -7,3 +7,6 @@ export const CodeConfirmPage = lazy(() =>
   import('./(auth)/Code/Code').then((module) => ({ default: module.Code }))
 );
 export const Home = lazy(() => import('./Home/Home').then((module) => ({ default: module.Home })));
+export const Profile = lazy(() =>
+  import('./Profile/Profile').then((module) => ({ default: module.Profile }))
+);

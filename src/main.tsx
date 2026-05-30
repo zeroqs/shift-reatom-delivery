@@ -7,6 +7,8 @@ import { App } from './app/App.tsx';
 import { tokenAtom, userAtom } from './app/user.model.ts';
 import { theme } from './theme.ts';
 
+import './shared/api';
+
 import '@mantine/notifications/styles.css';
 import '@mantine/core/styles.css';
 import './styles.css';
@@ -16,7 +18,7 @@ const init = async () => {
   if (!token) userAtom.set(null);
 
   try {
-    const session = await getApiUsersSession({ headers: { authorization: `Bearer ${token}` } });
+    const session = await getApiUsersSession();
     userAtom.set(session.data.user);
   } catch {
     tokenAtom.set(null);

@@ -1,6 +1,8 @@
 import { atom, computed, withLocalStorage } from '@reatom/core';
 import { z } from 'zod';
 
+import { router } from './router';
+
 export const userSchema = z.object({
   _id: z.string(),
   phone: z.string(),
@@ -28,3 +30,9 @@ export const userAtom = atom<User | null>(null, 'user').extend(
 );
 
 export const isAuthenticated = computed(() => userAtom() !== null, 'user.isAuthenticated');
+
+export const logout = () => {
+  userAtom.set(null);
+  tokenAtom.set(null);
+  router.login.go();
+};

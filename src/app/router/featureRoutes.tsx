@@ -1,8 +1,9 @@
 import { sleep, wrap } from '@reatom/core';
 
 import { isAuthenticated } from '@/app/user.model';
-import { CodeConfirmPage, Home, PhoneLoginPage } from '@/pages';
-import { loginForm, phoneField, phoneForm } from '@/pages/(auth)/model';
+import { CodeConfirmPage, Home, PhoneLoginPage, Profile } from '@/pages';
+import { createLoginForm, phoneField, phoneForm } from '@/pages/(auth)/model';
+import { createProfileForm } from '@/pages/Profile/model';
 import { LoaderPage } from '@/shared';
 
 import { router } from '.';
@@ -51,7 +52,7 @@ export const loginConfirmRoute = loginRoute.reatomRoute({
   loader: async () => {
     await wrap(sleep(80));
 
-    return { form: loginForm };
+    return { form: createLoginForm() };
   },
   render: (self) => {
     const status = self.loader.status();
@@ -66,4 +67,22 @@ export const loginConfirmRoute = loginRoute.reatomRoute({
 export const homeRoute = authenticatedRoute.reatomRoute({
   path: '',
   render: () => <Home />
+});
+
+export const profileRoute = authenticatedRoute.reatomRoute({
+  path: 'profile',
+
+  loader: async () => {
+    await wrap(sleep(80));
+
+    return { form: createProfileForm() };
+  },
+  render: (self) => {
+    const status = self.loader.status();
+
+    if (status.data) return <Profile model={status.data} />;
+    if (status.isRejected) return <>Ошибка</>;
+
+    return <LoaderPage />;
+  }
 });

@@ -1,4 +1,4 @@
-import type { MantineColorsTuple } from '@mantine/core';
+import type { CSSVariablesResolver, MantineColorsTuple } from '@mantine/core';
 
 import { createTheme } from '@mantine/core';
 
@@ -41,5 +41,15 @@ export const theme = createTheme({
       },
       h3: { fontWeight: '800' }
     }
+  }
+});
+
+export const resolver: CSSVariablesResolver = () => ({
+  variables: {},
+  light: {
+    '--mantine-color-anchor': 'var(--mantine-color-gray-6)'
+  },
+  dark: {
+    '--mantine-color-anchor': 'var(--mantine-color-gray-4)'
   }
 });

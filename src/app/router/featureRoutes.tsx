@@ -1,8 +1,11 @@
+import { getApiDeliveryPoints } from '@api';
 import { sleep, wrap } from '@reatom/core';
 
 import { isAuthenticated } from '@/app/user.model';
 import { CodeConfirmPage, Home, PhoneLoginPage, Profile } from '@/pages';
 import { createLoginForm, phoneField, phoneForm } from '@/pages/(auth)/model';
+import { createDeliveryForm } from '@/pages/Home/model';
+import { getDeliveryCities, getRandomCityTips } from '@/pages/Home/utils';
 import { createProfileForm } from '@/pages/Profile/model';
 import { LoaderPage } from '@/shared';
 
@@ -66,12 +69,30 @@ export const loginConfirmRoute = loginRoute.reatomRoute({
 
 export const homeRoute = authenticatedRoute.reatomRoute({
   path: '',
-  render: () => <Home />
+  loader: async () => {
+    const response = await getApiDeliveryPoints();
+    const cities = getDeliveryCities(response.data.points);
+    const form = createDeliveryForm(response.data.points);
+
+    return {
+      points: response.data.points,
+      cities,
+      tips: getRandomCityTips(cities),
+      form
+    };
+  },
+  render: (self) => {
+    const status = self.loader.status();
+
+    if (status.data) return <Home model={status.data} />;
+    if (status.isRejected) return <>Ошибка</>;
+
+    return <LoaderPage />;
+  }
 });
 
 export const profileRoute = authenticatedRoute.reatomRoute({
   path: 'profile',
-
   loader: async () => {
     await wrap(sleep(80));
 

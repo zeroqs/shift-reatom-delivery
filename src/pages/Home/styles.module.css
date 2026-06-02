@@ -117,3 +117,18 @@
     align-items: stretch;
   }
 }
+
+.tips {
+  display: flex;
+  gap: 8px;
+}
+
+.tip {
+  padding: 0;
+
+  font: inherit;
+
+  background: none;
+  border: 0;
+  cursor: pointer;
+}

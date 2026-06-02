@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client';
 
 import { App } from './app/App.tsx';
 import { tokenAtom, userAtom } from './app/user.model.ts';
-import { theme } from './theme.ts';
+import { resolver, theme } from './theme.ts';
 
 import './shared/api';
 
@@ -26,7 +26,7 @@ const init = async () => {
   }
 
   createRoot(document.getElementById('root')!).render(
-    <MantineProvider theme={theme}>
+    <MantineProvider cssVariablesResolver={resolver} theme={theme}>
       <Notifications position='top-right' />
       <App />
     </MantineProvider>

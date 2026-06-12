@@ -4,12 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint \"src/**/*.{js,mjs,cjs,ts,mts,jsx,tsx}\" --fix && lint:styles",
-    "lint:styles": "stylelint \"src/**/*.css\" --fix",
-    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\" ",
-    "preview": "vite preview"
+    "dev": "mise run dev",
+    "build": "mise run build",
+    "lint": "mise run lint",
+    "lint:styles": "mise run lint:styles",
+    "format": "mise run format",
+    "preview": "mise run preview",
+    "typecheck": "mise run typecheck",
+    "validate": "mise run validate"
   },
   "dependencies": {
     "@mantine/core": "^9.2.1",
@@ -43,5 +45,6 @@
     "typescript": "~6.0.2",
     "vite": "^8.0.12",
     "vite-plugin-svgr": "^5.2.0"
-  }
+  },
+  "packageManager": "pnpm@11.5.2"
 }

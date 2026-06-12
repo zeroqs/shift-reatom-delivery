@@ -1,41 +1,44 @@
 import type { DeliveryPoint } from '@api';
 
-import { reatomField, reatomForm } from '@reatom/core';
+import { reatomForm } from '@reatom/core';
+import z from 'zod';
 
-interface CityField {
-  latitude: number;
-  longitude: number;
-}
+import { createCityField, createPackageField } from './utils/formFields';
 
-const getCityName = (points: Array<DeliveryPoint>, city: CityField | null) => {
-  if (!city) return '';
+const citySchema = z
+  .object({
+    latitude: z.number(),
+    longitude: z.number()
+  })
+  .nullable()
+  .refine(Boolean, 'Выберите город');
 
-  return (
-    points.find((point) => point.latitude === city.latitude && point.longitude === city.longitude)
-      ?.name ?? ''
-  );
-};
+const packageSchema = z
+  .object({
+    height: z.number(),
+    length: z.number(),
+    weight: z.number(),
+    width: z.number()
+  })
+  .nullable()
+  .refine(Boolean, 'Выберите размер посылки');
 
-const getCityValue = (points: Array<DeliveryPoint>, cityName: string) => {
-  const point = points.find((item) => item.name === cityName);
-
-  return point ? { latitude: point.latitude, longitude: point.longitude } : null;
-};
-
-const createCityField = (points: Array<DeliveryPoint>, name: string) =>
-  reatomField<CityField | null, string>(null, {
-    name,
-    fromState: (state) => getCityName(points, state),
-    toState: (value) => getCityValue(points, value)
-  });
+const deliveryFormSchema = z.object({
+  package: packageSchema,
+  receiverPoint: citySchema,
+  senderPoint: citySchema
+});
 
 export const createDeliveryForm = (points: Array<DeliveryPoint>) =>
   reatomForm(
     {
+      package: createPackageField(),
       senderPoint: createCityField(points, 'sendingCity'),
       receiverPoint: createCityField(points, 'destinationCity')
     },
     {
+      schema: deliveryFormSchema,
+      keepErrorOnChange: false,
       onSubmit: async (values) => {
         console.log(values);
       }

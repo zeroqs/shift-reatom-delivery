@@ -1,5 +1,5 @@
-import { getApiDeliveryPoints } from '@api';
-import { sleep, wrap } from '@reatom/core';
+import { getApiDeliveryPackageTypes, getApiDeliveryPoints } from '@api';
+import { retryComputed, sleep, wrap } from '@reatom/core';
 
 import { isAuthenticated } from '@/app/user.model';
 import { CodeConfirmPage, Home, PhoneLoginPage, Profile } from '@/pages';
@@ -7,7 +7,7 @@ import { createLoginForm, phoneField, phoneForm } from '@/pages/(auth)/model';
 import { createDeliveryForm } from '@/pages/Home/model';
 import { getDeliveryCities, getRandomCityTips } from '@/pages/Home/utils';
 import { createProfileForm } from '@/pages/Profile/model';
-import { LoaderPage } from '@/shared';
+import { catchError, LoaderPage } from '@/shared';
 
 import { router } from '.';
 import { authenticatedRoute, rootRoute } from './internal';
@@ -70,12 +70,19 @@ export const loginConfirmRoute = loginRoute.reatomRoute({
 export const homeRoute = authenticatedRoute.reatomRoute({
   path: '',
   loader: async () => {
-    const response = await getApiDeliveryPoints();
-    const cities = getDeliveryCities(response.data.points);
-    const form = createDeliveryForm(response.data.points);
+    const points = await catchError(getApiDeliveryPoints);
+    const packageTypes = await catchError(getApiDeliveryPackageTypes);
+
+    const deliveryPoints = points.result?.data.points ?? [];
+    const deliveryPackageTypes = packageTypes.result?.data.packages ?? [];
+    const cities = getDeliveryCities(deliveryPoints);
+    const form = createDeliveryForm(deliveryPoints);
 
     return {
-      points: response.data.points,
+      points: deliveryPoints,
+      packageTypes: deliveryPackageTypes,
+      isPointsError: Boolean(points.error),
+      isPackageTypesError: Boolean(packageTypes.error),
       cities,
       tips: getRandomCityTips(cities),
       form
@@ -84,7 +91,8 @@ export const homeRoute = authenticatedRoute.reatomRoute({
   render: (self) => {
     const status = self.loader.status();
 
-    if (status.data) return <Home model={status.data} />;
+    if (status.data)
+      return <Home model={status.data} onRetry={wrap(() => retryComputed(self.loader))} />;
     if (status.isRejected) return <>Ошибка</>;
 
     return <LoaderPage />;

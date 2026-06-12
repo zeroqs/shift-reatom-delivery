@@ -1,50 +1,18 @@
-import { Anchor, Button, Image, Paper, Select, TextInput, Title } from '@mantine/core';
+import { Button, Image, Paper, Select, TextInput, Title } from '@mantine/core';
 import { bindField, reatomComponent } from '@reatom/react';
 import { ArrowRight } from 'lucide-react';
 
-import type { DeliveryForm } from './model';
+import type { HomeProps } from './types/types';
+
+import { CitySelectNothingFound, CityTips, PackageSizeSelect } from './components';
 
 import styles from './styles.module.css';
 
-interface HomeModel {
-  cities: Array<string>;
-  form: DeliveryForm;
-  tips: {
-    senderCities: Array<string>;
-    receiverCities: Array<string>;
-  };
-}
-
-interface Props {
-  model: HomeModel;
-}
-
-interface CityTipsProps {
-  cities: Array<string>;
-  onSelectCity: (city: string) => void;
-}
-
-const CityTips = ({ cities, onSelectCity }: CityTipsProps) => (
-  <div className={styles.tips}>
-    {cities.map((city) => (
-      <Anchor
-        key={city}
-        className={styles.tip}
-        component='button'
-        type='button'
-        underline='always'
-        onClick={() => onSelectCity(city)}
-      >
-        {city}
-      </Anchor>
-    ))}
-  </div>
-);
-
-export const Home = reatomComponent(({ model }: Props) => {
+export const Home = reatomComponent(({ model, onRetry }: HomeProps) => {
   const { form } = model;
   const sendingCityField = bindField(form.fields.senderPoint);
   const destinationCityField = bindField(form.fields.receiverPoint);
+  const packageValue = form.fields.package.value();
 
   return (
     <main className={styles.container}>
@@ -61,11 +29,15 @@ export const Home = reatomComponent(({ model }: Props) => {
           <div className={styles.controls}>
             <section>
               <Select
+                nothingFoundMessage={
+                  <CitySelectNothingFound isError={model.isPointsError} onRetry={onRetry} />
+                }
                 data={model.cities}
                 label='Город отправки'
                 placeholder='Выберите город'
                 size='md'
                 {...sendingCityField}
+                error={sendingCityField.error}
                 onChange={(value) => sendingCityField.onChange(value ?? '')}
               />
               <CityTips cities={model.tips.senderCities} onSelectCity={sendingCityField.onChange} />
@@ -73,11 +45,15 @@ export const Home = reatomComponent(({ model }: Props) => {
 
             <section>
               <Select
+                nothingFoundMessage={
+                  <CitySelectNothingFound isError={model.isPointsError} onRetry={onRetry} />
+                }
                 data={model.cities}
                 label='Город назначения'
                 placeholder='Выберите город'
                 size='md'
                 {...destinationCityField}
+                error={destinationCityField.error}
                 onChange={(value) => destinationCityField.onChange(value ?? '')}
               />
               <CityTips
@@ -86,11 +62,13 @@ export const Home = reatomComponent(({ model }: Props) => {
               />
             </section>
 
-            <Select
-              data={['React', 'Angular', 'Vue', 'Svelte']}
-              label='Размер посылки'
-              placeholder='Введите размер посылки'
-              size='md'
+            <PackageSizeSelect
+              error={form.fields.package.validation().error}
+              isError={model.isPackageTypesError}
+              packageTypes={model.packageTypes}
+              value={packageValue}
+              onChange={form.fields.package.set}
+              onRetry={onRetry}
             />
           </div>
 

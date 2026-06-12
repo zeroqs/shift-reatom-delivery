@@ -1,0 +1,35 @@
+[tools]
+node = "26.2.0"
+pnpm = "11.5.2"
+
+[tasks.dev]
+description = "Start Vite dev server"
+run = "pnpm exec vite"
+
+[tasks.build]
+description = "Build production bundle"
+run = "pnpm exec tsc -b && pnpm exec vite build"
+
+[tasks.preview]
+description = "Preview production build"
+run = "pnpm exec vite preview"
+
+[tasks.lint]
+description = "Lint and fix source and styles"
+run = "pnpm exec eslint \"src/**/*.{js,mjs,cjs,ts,mts,jsx,tsx}\" --fix && pnpm exec stylelint \"src/**/*.css\" --fix"
+
+[tasks."lint:styles"]
+description = "Lint and fix styles"
+run = "pnpm exec stylelint \"src/**/*.css\" --fix"
+
+[tasks.format]
+description = "Format source files"
+run = "pnpm exec prettier --write \"src/**/*.{ts,tsx,js,jsx}\""
+
+[tasks.typecheck]
+description = "Run TypeScript project checks"
+run = "pnpm exec tsc -b"
+
+[tasks.validate]
+description = "Run project validation"
+run = "mise run lint && mise run build"

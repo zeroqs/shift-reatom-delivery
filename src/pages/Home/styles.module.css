@@ -132,3 +132,20 @@
   border: 0;
   cursor: pointer;
 }
+
+.selectRetry {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px;
+
+  text-align: center;
+}
+
+.packageTypeOption {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}

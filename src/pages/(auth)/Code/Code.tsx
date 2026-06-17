@@ -1,6 +1,6 @@
 import { ActionIcon, Button, Paper, PinInput, Title, Typography } from '@mantine/core';
 import { bindField, reatomComponent } from '@reatom/react';
-import { ChevronRight } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 
 import { router } from '@/app/router';
 import { Delivery } from '@/shared';
@@ -32,7 +32,7 @@ export const Code = reatomComponent(({ model }: Props) => {
       <div className={styles.auth}>
         <div className={styles.titleContainer}>
           <ActionIcon variant='transparent' onClick={() => router.login.go()}>
-            <ChevronRight />
+            <ChevronLeft />
           </ActionIcon>
           <Title className={styles.title} order={2}>
             Проверочный код

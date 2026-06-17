@@ -1,8 +1,15 @@
 import type { DeliveryPoint } from '@api';
 
+import { postApiDeliveryCalc } from '@api';
+import { notifications } from '@mantine/notifications';
 import { reatomForm } from '@reatom/core';
 import z from 'zod';
 
+import { router } from '@/app/router';
+import { catchError } from '@/shared';
+
+import { deliveryOptionsAtom } from '../(delivery-steps)/steps/DeliveryType/model';
+import { INITIAL_STEP } from '../(delivery-steps)/utils';
 import { createCityField, createPackageField } from './utils/formFields';
 
 const citySchema = z
@@ -11,7 +18,8 @@ const citySchema = z
     longitude: z.number()
   })
   .nullable()
-  .refine(Boolean, 'Выберите город');
+  .refine(Boolean, 'Выберите город')
+  .transform((value) => value!);
 
 const packageSchema = z
   .object({
@@ -21,7 +29,8 @@ const packageSchema = z
     width: z.number()
   })
   .nullable()
-  .refine(Boolean, 'Выберите размер посылки');
+  .refine(Boolean, 'Выберите размер посылки')
+  .transform((value) => value!);
 
 const deliveryFormSchema = z.object({
   package: packageSchema,
@@ -40,7 +49,19 @@ export const createDeliveryForm = (points: Array<DeliveryPoint>) =>
       schema: deliveryFormSchema,
       keepErrorOnChange: false,
       onSubmit: async (values) => {
-        console.log(values);
+        const response = await catchError(() => postApiDeliveryCalc({ body: values }));
+        if (response.error) {
+          notifications.show({
+            title: 'Ошибка',
+            message: response.error.message,
+            color: 'red'
+          });
+          return;
+        }
+        deliveryOptionsAtom.set(response.result.data.options);
+        router.deliveryFormStep.go({
+          step: INITIAL_STEP
+        });
       }
     }
   );

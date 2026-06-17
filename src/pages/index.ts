@@ -10,3 +10,6 @@ export const Home = lazy(() => import('./Home/Home').then((module) => ({ default
 export const Profile = lazy(() =>
   import('./Profile/Profile').then((module) => ({ default: module.Profile }))
 );
+export const Wizard = lazy(() =>
+  import('./(delivery-steps)/Wizard').then((module) => ({ default: module.Wizard }))
+);

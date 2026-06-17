@@ -1,0 +1,21 @@
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.progressBar {
+  width: 100%;
+  height: 5px;
+
+  background-color: var(--mantine-color-gray-2);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progressValue {
+  height: 100%;
+
+  background-color: var(--mantine-color-green-5);
+  border-radius: inherit;
+}

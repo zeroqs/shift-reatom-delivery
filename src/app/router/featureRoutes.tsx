@@ -1,9 +1,11 @@
 import { getApiDeliveryPackageTypes, getApiDeliveryPoints } from '@api';
-import { retryComputed, sleep, wrap } from '@reatom/core';
+import { retryComputed, wrap } from '@reatom/core';
 
 import { isAuthenticated } from '@/app/user.model';
-import { CodeConfirmPage, Home, PhoneLoginPage, Profile } from '@/pages';
+import { CodeConfirmPage, Home, PhoneLoginPage, Profile, Wizard } from '@/pages';
 import { createLoginForm, phoneField, phoneForm } from '@/pages/(auth)/model';
+import { hasDeliveryOptionsAtom } from '@/pages/(delivery-steps)/steps/DeliveryType/model';
+import { INITIAL_STEP, isStep } from '@/pages/(delivery-steps)/utils';
 import { createDeliveryForm } from '@/pages/Home/model';
 import { getDeliveryCities, getRandomCityTips } from '@/pages/Home/utils';
 import { createProfileForm } from '@/pages/Profile/model';
@@ -21,11 +23,7 @@ export const loginRoute = rootRoute.reatomRoute({
     }
     return {};
   },
-  loader: async () => {
-    await wrap(sleep(80));
-
-    return { form: phoneForm };
-  },
+  loader: async () => ({ form: phoneForm }),
   render: (self) => {
     const status = self.loader.status();
 
@@ -52,11 +50,7 @@ export const loginConfirmRoute = loginRoute.reatomRoute({
     }
     return {};
   },
-  loader: async () => {
-    await wrap(sleep(80));
-
-    return { form: createLoginForm() };
-  },
+  loader: async () => ({ form: createLoginForm() }),
   render: (self) => {
     const status = self.loader.status();
 
@@ -101,11 +95,7 @@ export const homeRoute = authenticatedRoute.reatomRoute({
 
 export const profileRoute = authenticatedRoute.reatomRoute({
   path: 'profile',
-  loader: async () => {
-    await wrap(sleep(80));
-
-    return { form: createProfileForm() };
-  },
+  loader: async () => ({ form: createProfileForm() }),
   render: (self) => {
     const status = self.loader.status();
 
@@ -114,4 +104,22 @@ export const profileRoute = authenticatedRoute.reatomRoute({
 
     return <LoaderPage />;
   }
+});
+
+export const deliveryFormStepsRoute = authenticatedRoute.reatomRoute({
+  path: 'delivery/:step',
+  params: ({ step }: { step: string }) => {
+    if (!hasDeliveryOptionsAtom()) {
+      router.home.go();
+      return null;
+    }
+
+    if (!isStep(step)) {
+      router.deliveryFormStep.go({ step: INITIAL_STEP });
+      return null;
+    }
+
+    return { step };
+  },
+  render: () => <Wizard />
 });

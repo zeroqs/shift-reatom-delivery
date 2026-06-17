@@ -1,0 +1,42 @@
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  width: min(100%, 700px);
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  width: 100%;
+  padding: 16px;
+
+  text-align: left;
+
+  border: 1px solid var(--mantine-color-custom-6);
+  border-radius: 20px;
+}
+
+.card:hover {
+  background-color: var(--mantine-color-gray-0);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.price {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.icon {
+  flex: 0 0 auto;
+}

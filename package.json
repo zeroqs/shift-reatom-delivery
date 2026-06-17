@@ -11,13 +11,14 @@
     "format": "mise run format",
     "preview": "mise run preview",
     "typecheck": "mise run typecheck",
-    "validate": "mise run validate"
+    "validate": "mise run validate",
+    "generate-api": "npx apicraft generate"
   },
   "dependencies": {
     "@mantine/core": "^9.2.1",
     "@mantine/hooks": "^9.2.1",
     "@mantine/notifications": "^9.2.1",
-    "@reatom/core": "^1001.0.0",
+    "@reatom/core": "^1001.1.0",
     "@reatom/react": "^1001.0.0",
     "@siberiacancode/fetches": "^1.14.3",
     "lucide-react": "^1.17.0",

@@ -1,0 +1,48 @@
+.container {
+  display: flex;
+  gap: 25px;
+
+  width: 100%;
+}
+
+.leftSide {
+  display: flex;
+  flex: 1 1 70%;
+  flex-direction: column;
+  gap: 15px;
+
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  width: 100%;
+}
+
+.homeBreadcrumb {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 0;
+
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  width: 100%;
+}
+
+@media (width <= 900px) {
+  .container {
+    flex-direction: column;
+  }
+}

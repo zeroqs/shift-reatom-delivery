@@ -72,7 +72,14 @@ export const Home = reatomComponent(({ model, onRetry }: HomeProps) => {
             />
           </div>
 
-          <Button fullWidth radius={30} rightSection={<ArrowRight />} size='lg' type='submit'>
+          <Button
+            fullWidth
+            loading={!form.submit.ready()}
+            radius={30}
+            rightSection={<ArrowRight />}
+            size='lg'
+            type='submit'
+          >
             Рассчитать
           </Button>
         </Paper>

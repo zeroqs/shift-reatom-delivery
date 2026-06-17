@@ -8,7 +8,7 @@ import { Delivery } from '@/shared';
 import styles from './styles.module.css';
 
 export const Layout = ({ children }: { children: React.ReactNode }) => (
-  <Container pt={20} size='lg'>
+  <Container pt={20} size='1200px'>
     <header className={styles.header}>
       <Delivery />
       <div className={styles.actions}>

@@ -1,5 +1,7 @@
 import {
+  applicationSentRoute,
   deliveryFormStepsRoute,
+  historyRoute,
   homeRoute,
   loginConfirmRoute,
   loginRoute,
@@ -13,5 +15,7 @@ export const router = {
   loginConfirm: loginConfirmRoute,
   home: homeRoute,
   profile: profileRoute,
-  deliveryFormStep: deliveryFormStepsRoute
+  deliveryFormStep: deliveryFormStepsRoute,
+  applicationSent: applicationSentRoute,
+  history: historyRoute
 };

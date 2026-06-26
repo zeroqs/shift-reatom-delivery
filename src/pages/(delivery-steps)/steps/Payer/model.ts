@@ -21,6 +21,6 @@ export const payerForm = reatomForm(
 );
 
 export const payerInfoAtom = computed(() => ({
-  title: 'Оплата',
+  title: 'Кто оплачивает доставку',
   text: payerForm.fields.payer() === 'receiver' ? 'Получатель' : 'Отправитель'
 }));

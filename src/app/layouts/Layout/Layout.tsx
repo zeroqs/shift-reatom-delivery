@@ -12,7 +12,12 @@ export const Layout = ({ children }: { children: React.ReactNode }) => (
     <header className={styles.header}>
       <Delivery />
       <div className={styles.actions}>
-        <ActionIcon className={styles.action} size='input-md' variant='light'>
+        <ActionIcon
+          className={styles.action}
+          size='input-md'
+          variant='light'
+          onClick={() => router.history.go()}
+        >
           <History />
         </ActionIcon>
         <ActionIcon

@@ -60,6 +60,6 @@ export const Wizard = reatomComponent(() => (
       <div className={styles.content}>{COMPONENTS[stepAtom()]}</div>
     </div>
 
-    {stepAtom() !== INITIAL_STEP && <OrderInfo />}
+    {stepAtom() !== INITIAL_STEP && stepAtom() !== 'deliveryVerification' && <OrderInfo />}
   </main>
 ));

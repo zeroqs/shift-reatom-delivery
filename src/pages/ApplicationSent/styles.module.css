@@ -1,0 +1,72 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  width: 100%;
+
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  width: 100%;
+}
+
+.rows {
+  display: flex;
+  gap: 40px;
+}
+
+.column {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.total {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  width: min(100%, 398px);
+
+  button {
+    border-radius: 40px;
+  }
+}
+
+@media (width <= 768px) {
+  .rows {
+    flex-direction: column;
+    gap: 16px;
+  }
+}

@@ -1,6 +1,10 @@
-import type { CSSVariablesResolver, MantineColorsTuple } from '@mantine/core';
+import type {
+  CSSVariablesResolver,
+  MantineColorsTuple,
+  VariantColorsResolver
+} from '@mantine/core';
 
-import { createTheme } from '@mantine/core';
+import { createTheme, defaultVariantColorsResolver } from '@mantine/core';
 
 const colors: MantineColorsTuple = [
   '#f5f5f5',
@@ -15,10 +19,34 @@ const colors: MantineColorsTuple = [
   '#0b0b0b'
 ];
 
+const STATUS_BADGE_COLORS: Record<string, string> = {
+  'status-created': '#fef08a',
+  'status-waiting': '#fde68a',
+  'status-transit': '#bfdbfe',
+  'status-delivered': '#bbf7d0',
+  'status-canceled': '#fecaca'
+};
+
+const variantColorResolver: VariantColorsResolver = (input) => {
+  const statusColor = STATUS_BADGE_COLORS[input.variant];
+
+  if (statusColor) {
+    return {
+      background: statusColor,
+      hover: statusColor,
+      color: 'var(--mantine-color-black)',
+      border: 'none'
+    };
+  }
+
+  return defaultVariantColorsResolver(input);
+};
+
 export const theme = createTheme({
   colors: {
     custom: colors
   },
+  variantColorResolver,
   radius: {
     xs: '0.25rem',
     sm: '0.5rem',

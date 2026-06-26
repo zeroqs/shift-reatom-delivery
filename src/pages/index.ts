@@ -13,3 +13,11 @@ export const Profile = lazy(() =>
 export const Wizard = lazy(() =>
   import('./(delivery-steps)/Wizard').then((module) => ({ default: module.Wizard }))
 );
+export const ApplicationSent = lazy(() =>
+  import('./ApplicationSent/ApplicationSent').then((module) => ({
+    default: module.ApplicationSent
+  }))
+);
+export const History = lazy(() =>
+  import('./History/History').then((module) => ({ default: module.History }))
+);

@@ -45,7 +45,7 @@ export const ReceiverAddress = reatomComponent(() => {
             label='Оставить заказ у двери'
             onChange={(e) => isNonContact.set(e.currentTarget.checked)}
           />
-          <Popover position='bottom-start' shadow='md' width={320} withArrow>
+          <Popover withArrow position='bottom-start' shadow='md' width={320}>
             <Popover.Target>
               <ActionIcon
                 aria-label='Подробнее о бесконтактной доставке'

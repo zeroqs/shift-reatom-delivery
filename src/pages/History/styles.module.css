@@ -1,0 +1,60 @@
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  margin-top: 48px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 8px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  padding: 16px;
+
+  border-bottom: 1px solid #ebebeb;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.status {
+  flex: 0 0 120px;
+}
+
+.address {
+  flex: 1;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.id {
+  flex: 0 0 202px;
+}
+
+.more {
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+
+@media (width <= 768px) {
+  .row {
+    flex-wrap: wrap;
+  }
+
+  .id {
+    flex-basis: auto;
+  }
+}

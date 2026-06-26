@@ -31,5 +31,5 @@ export const senderAddressForm = reatomForm(
 export const senderAddressInfoAtom = computed(() => {
   const { street, house, apartment } = senderAddressForm.fields;
   const apt = apartment() ? `, кв. ${apartment()}` : '';
-  return { title: 'Адрес отправителя', text: `ул. ${street()}, д. ${house()}${apt}` };
+  return { title: 'Куда доставить', text: `ул. ${street()}, д. ${house()}${apt}` };
 });

@@ -1,15 +1,24 @@
-import { getApiDeliveryPackageTypes, getApiDeliveryPoints } from '@api';
+import { getApiDeliveryOrders, getApiDeliveryPackageTypes, getApiDeliveryPoints } from '@api';
 import { retryComputed, wrap } from '@reatom/core';
 
 import { isAuthenticated } from '@/app/user.model';
-import { CodeConfirmPage, Home, PhoneLoginPage, Profile, Wizard } from '@/pages';
+import {
+  ApplicationSent,
+  CodeConfirmPage,
+  History,
+  Home,
+  PhoneLoginPage,
+  Profile,
+  Wizard
+} from '@/pages';
 import { createLoginForm, phoneField, phoneForm } from '@/pages/(auth)/model';
 import { hasDeliveryOptionsAtom } from '@/pages/(delivery-steps)/steps/DeliveryType/model';
 import { INITIAL_STEP, isStep } from '@/pages/(delivery-steps)/utils';
+import { sentOrderAtom } from '@/pages/ApplicationSent/model';
 import { createDeliveryForm } from '@/pages/Home/model';
 import { getDeliveryCities, getRandomCityTips } from '@/pages/Home/utils';
 import { createProfileForm } from '@/pages/Profile/model';
-import { catchError, LoaderPage } from '@/shared';
+import { catchError, ErrorPage, LoaderPage } from '@/shared';
 
 import { router } from '.';
 import { authenticatedRoute, rootRoute } from './internal';
@@ -28,7 +37,8 @@ export const loginRoute = rootRoute.reatomRoute({
     const status = self.loader.status();
 
     if (status.data) return <PhoneLoginPage model={status.data} />;
-    if (status.isRejected) return <>error</>;
+    if (status.isRejected)
+      return <ErrorPage onRetry={wrap(() => retryComputed(self.loader))} />;
 
     return <LoaderPage />;
   }
@@ -55,7 +65,8 @@ export const loginConfirmRoute = loginRoute.reatomRoute({
     const status = self.loader.status();
 
     if (status.data) return <CodeConfirmPage model={status.data} />;
-    if (status.isRejected) return <>error</>;
+    if (status.isRejected)
+      return <ErrorPage onRetry={wrap(() => retryComputed(self.loader))} />;
 
     return <LoaderPage />;
   }
@@ -70,7 +81,7 @@ export const homeRoute = authenticatedRoute.reatomRoute({
     const deliveryPoints = points.result?.data.points ?? [];
     const deliveryPackageTypes = packageTypes.result?.data.packages ?? [];
     const cities = getDeliveryCities(deliveryPoints);
-    const form = createDeliveryForm(deliveryPoints);
+    const form = createDeliveryForm(deliveryPoints, deliveryPackageTypes);
 
     return {
       points: deliveryPoints,
@@ -87,7 +98,8 @@ export const homeRoute = authenticatedRoute.reatomRoute({
 
     if (status.data)
       return <Home model={status.data} onRetry={wrap(() => retryComputed(self.loader))} />;
-    if (status.isRejected) return <>Ошибка</>;
+    if (status.isRejected)
+      return <ErrorPage onRetry={wrap(() => retryComputed(self.loader))} />;
 
     return <LoaderPage />;
   }
@@ -100,7 +112,8 @@ export const profileRoute = authenticatedRoute.reatomRoute({
     const status = self.loader.status();
 
     if (status.data) return <Profile model={status.data} />;
-    if (status.isRejected) return <>Ошибка</>;
+    if (status.isRejected)
+      return <ErrorPage onRetry={wrap(() => retryComputed(self.loader))} />;
 
     return <LoaderPage />;
   }
@@ -122,4 +135,34 @@ export const deliveryFormStepsRoute = authenticatedRoute.reatomRoute({
     return { step };
   },
   render: () => <Wizard />
+});
+
+export const historyRoute = authenticatedRoute.reatomRoute({
+  path: 'history',
+  loader: async () => {
+    const orders = await catchError(getApiDeliveryOrders);
+
+    return { orders: orders.result?.data.orders ?? [] };
+  },
+  render: (self) => {
+    const status = self.loader.status();
+
+    if (status.data) return <History model={status.data} />;
+    if (status.isRejected)
+      return <ErrorPage onRetry={wrap(() => retryComputed(self.loader))} />;
+
+    return <LoaderPage />;
+  }
+});
+
+export const applicationSentRoute = authenticatedRoute.reatomRoute({
+  path: 'application-sent',
+  params: () => {
+    if (!sentOrderAtom()) {
+      router.home.go();
+      return null;
+    }
+    return {};
+  },
+  render: () => <ApplicationSent />
 });

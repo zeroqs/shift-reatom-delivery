@@ -1,7 +1,7 @@
 import { computed, reatomForm } from '@reatom/core';
 import z from 'zod';
 
-import { createPhoneField } from '@/shared';
+import { createPhoneField, formatPhone } from '@/shared';
 
 import { completedStepsAtom, goToDeliveryStep } from '../../model';
 
@@ -33,6 +33,9 @@ export const senderForm = reatomForm(
 );
 
 export const senderInfoAtom = computed(() => {
-  const { lastname, firstname, middlename, phone } = senderForm.fields;
-  return { title: 'Отправитель', text: `${lastname()} ${firstname()} ${middlename()}, ${phone()}` };
+  const { lastname, firstname, middlename } = senderForm.fields;
+  return {
+    title: 'Отправитель',
+    text: `${lastname()} ${firstname()} ${middlename()}, ${formatPhone(senderPhoneField.value())}`
+  };
 });

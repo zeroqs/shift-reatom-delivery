@@ -1,0 +1,55 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  width: 100%;
+}
+
+.rows {
+  display: flex;
+  gap: 40px;
+}
+
+.column {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.total {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.actions {
+  display: flex;
+  gap: 15px;
+
+  width: 100%;
+
+  button {
+    border-radius: 40px;
+  }
+}
+
+@media (width <= 520px) {
+  .actions {
+    flex-direction: column-reverse;
+  }
+}
+
+@media (width <= 768px) {
+  .rows {
+    flex-direction: column;
+    gap: 16px;
+  }
+}

@@ -1,23 +1,42 @@
 import { Button, TextInput } from '@mantine/core';
+import { bindField, reatomComponent } from '@reatom/react';
 
-import styles from './styles.module.css';
+import { PhoneMaskInput } from '@/shared';
 
-export const Receiver = () => (
-  <form className={styles.form}>
-    <div className={styles.fields}>
-      <TextInput label='Фамилия' size='md' />
-      <TextInput label='Имя' size='md' />
-      <TextInput label='Отчество' size='md' />
-      <TextInput label='Телефон' size='md' type='tel' />
-    </div>
+import { goBackStep } from '../../model';
+import { receiverForm } from './model';
 
-    <div className={styles.actions}>
-      <Button fullWidth size='lg' variant='light'>
-        Назад
-      </Button>
-      <Button fullWidth size='lg'>
-        Продолжить
-      </Button>
-    </div>
-  </form>
-);
+import styles from '../styles.module.css';
+
+export const Receiver = reatomComponent(() => {
+  const lastNameField = bindField(receiverForm.fields.lastname);
+  const firstNameField = bindField(receiverForm.fields.firstname);
+  const middleNameField = bindField(receiverForm.fields.middlename);
+  const phoneField = bindField(receiverForm.fields.phone);
+
+  return (
+    <form
+      className={styles.form}
+      onSubmit={(e) => {
+        e.preventDefault();
+        receiverForm.submit();
+      }}
+    >
+      <div className={styles.fields}>
+        <TextInput label='Фамилия' size='md' {...lastNameField} error={lastNameField.error} />
+        <TextInput label='Имя' size='md' {...firstNameField} error={firstNameField.error} />
+        <TextInput label='Отчество' size='md' {...middleNameField} error={middleNameField.error} />
+        <PhoneMaskInput field={phoneField} label='Телефон' size='md' />
+      </div>
+
+      <div className={styles.actions}>
+        <Button fullWidth size='lg' type='button' variant='light' onClick={goBackStep}>
+          Назад
+        </Button>
+        <Button fullWidth loading={!receiverForm.submit.ready()} size='lg' type='submit'>
+          Продолжить
+        </Button>
+      </div>
+    </form>
+  );
+});

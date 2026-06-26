@@ -1,11 +1,11 @@
 import { postApiAuthOtp, postApiUsersSignin } from '@api';
-import { reatomField, reatomForm, wrap } from '@reatom/core';
+import { reatomForm, wrap } from '@reatom/core';
 import { ResponseError } from '@siberiacancode/fetches';
 import z from 'zod';
 
 import { router } from '@/app/router';
 import { tokenAtom, userAtom } from '@/app/user.model';
-import { showErrorNotification } from '@/shared/utils';
+import { createPhoneField, showErrorNotification } from '@/shared';
 
 import { createCountdownTimer } from './utils';
 
@@ -17,11 +17,7 @@ const otpSchema = z.object({
   code: z.string().length(6, 'Код должен быть 6 символов')
 });
 
-export const phoneField = reatomField<string, string>('', {
-  name: 'phoneField',
-  fromState: (state) => state.replace(/^8/, '7'),
-  toState: (value) => value.replace(/^7/, '8')
-});
+export const phoneField = createPhoneField('auth.phoneField');
 
 export const otpRetryTmer = createCountdownTimer({
   name: 'otpRetryTmer',

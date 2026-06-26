@@ -1,4 +1,6 @@
-import { action, computed } from '@reatom/core';
+import type { Computed } from '@reatom/core';
+
+import { action, computed, reatomSet } from '@reatom/core';
 
 import { router } from '@/app/router';
 
@@ -22,3 +24,16 @@ export const breadcrumbsAtom = computed(() => {
 
 export const currentStepTitleAtom = computed(() => ALL_BREADCRUMBS[stepAtom()].title);
 export const currentStepNumberAtom = computed(() => BREADCRUMB_STEPS.indexOf(stepAtom()) + 1);
+
+export const goBackStep = action(() => {
+  const currentStepIndex = BREADCRUMB_STEPS.indexOf(stepAtom());
+  goToDeliveryStep(BREADCRUMB_STEPS[currentStepIndex - 1]);
+});
+
+export type OrderInfoAtom = Computed<{ title: string; text: string | undefined }>;
+
+export const completedStepsAtom = reatomSet<OrderInfoAtom>([], 'completedSteps');
+
+export const orderInfoAtom = computed(() =>
+  [...completedStepsAtom()].map((infoAtom) => infoAtom())
+);

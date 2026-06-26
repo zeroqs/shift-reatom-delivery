@@ -1,9 +1,11 @@
+import type { DeliveryOption } from '@api';
+
 import { Text, Title, UnstyledButton } from '@mantine/core';
 import { reatomComponent } from '@reatom/react';
 import { ChevronRight } from 'lucide-react';
 
-import { goToDeliveryStep } from '../../model';
-import { deliveryOptionsAtom } from './model';
+import { completedStepsAtom, goToDeliveryStep } from '../../model';
+import { deliveryOptionsAtom, deliveryTypeInfoAtom, selectedDeliveryOptionAtom } from './model';
 
 import styles from './styles.module.css';
 
@@ -23,13 +25,19 @@ const getWorkingDaysText = (days: number) => {
 export const DeliveryType = reatomComponent(() => {
   const options = deliveryOptionsAtom().toSorted((first, second) => first.days - second.days);
 
+  const handleOptionClick = (option: DeliveryOption) => {
+    selectedDeliveryOptionAtom.set(option);
+    completedStepsAtom.add(deliveryTypeInfoAtom);
+    goToDeliveryStep('receiver');
+  };
+
   return (
     <div className={styles.options}>
       {options.map((option) => (
         <UnstyledButton
           key={option.id}
           className={styles.card}
-          onClick={() => goToDeliveryStep('receiver')}
+          onClick={() => handleOptionClick(option)}
         >
           <div className={styles.content}>
             <Title order={4}>{option.name}</Title>

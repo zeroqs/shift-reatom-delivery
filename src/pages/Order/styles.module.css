@@ -1,0 +1,53 @@
+.order {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  margin-top: 48px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  width: 100%;
+}
+
+.columns {
+  display: flex;
+  gap: 40px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cancel {
+  width: min(100%, 302px);
+
+  border-radius: 9999px;
+
+  align-self: flex-start;
+}
+
+@media (width <= 768px) {
+  .columns {
+    flex-direction: column;
+    gap: 16px;
+  }
+}

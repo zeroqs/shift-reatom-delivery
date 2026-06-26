@@ -21,3 +21,6 @@ export const ApplicationSent = lazy(() =>
 export const History = lazy(() =>
   import('./History/History').then((module) => ({ default: module.History }))
 );
+export const Order = lazy(() =>
+  import('./Order/Order').then((module) => ({ default: module.Order }))
+);

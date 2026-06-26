@@ -3,7 +3,10 @@ import type { DeliveryOrder } from '@api';
 import { Badge, Button, Text, Title } from '@mantine/core';
 import { reatomComponent } from '@reatom/react';
 
-import { formatOrderAddress, STATUS_CONFIG } from './model';
+import { router } from '@/app/router';
+import { formatDeliveryAddress } from '@/shared';
+
+import { STATUS_CONFIG } from './model';
 
 import styles from './styles.module.css';
 
@@ -52,14 +55,19 @@ export const History = reatomComponent(({ model }: Props) => {
                 </div>
 
                 <Text className={styles.address} fw={500} fz={16}>
-                  {formatOrderAddress(order)}
+                  {formatDeliveryAddress(order)}
                 </Text>
 
                 <Text c='#0b0b0b' className={styles.id} fw={500} fz={14}>
                   {order._id}
                 </Text>
 
-                <Button className={styles.more} size='md' variant='light'>
+                <Button
+                  className={styles.more}
+                  size='md'
+                  variant='light'
+                  onClick={() => router.historyOrder.go({ orderId: order._id })}
+                >
                   Подробнее
                 </Button>
               </div>

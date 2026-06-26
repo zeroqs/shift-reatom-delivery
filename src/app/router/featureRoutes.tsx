@@ -1,4 +1,9 @@
-import { getApiDeliveryOrders, getApiDeliveryPackageTypes, getApiDeliveryPoints } from '@api';
+import {
+  getApiDeliveryOrderByOrderId,
+  getApiDeliveryOrders,
+  getApiDeliveryPackageTypes,
+  getApiDeliveryPoints
+} from '@api';
 import { retryComputed, wrap } from '@reatom/core';
 
 import { isAuthenticated } from '@/app/user.model';
@@ -7,6 +12,7 @@ import {
   CodeConfirmPage,
   History,
   Home,
+  Order,
   PhoneLoginPage,
   Profile,
   Wizard
@@ -37,8 +43,7 @@ export const loginRoute = rootRoute.reatomRoute({
     const status = self.loader.status();
 
     if (status.data) return <PhoneLoginPage model={status.data} />;
-    if (status.isRejected)
-      return <ErrorPage onRetry={wrap(() => retryComputed(self.loader))} />;
+    if (status.isRejected) return <ErrorPage onRetry={wrap(() => retryComputed(self.loader))} />;
 
     return <LoaderPage />;
   }
@@ -65,8 +70,7 @@ export const loginConfirmRoute = loginRoute.reatomRoute({
     const status = self.loader.status();
 
     if (status.data) return <CodeConfirmPage model={status.data} />;
-    if (status.isRejected)
-      return <ErrorPage onRetry={wrap(() => retryComputed(self.loader))} />;
+    if (status.isRejected) return <ErrorPage onRetry={wrap(() => retryComputed(self.loader))} />;
 
     return <LoaderPage />;
   }
@@ -98,8 +102,6 @@ export const homeRoute = authenticatedRoute.reatomRoute({
 
     if (status.data)
       return <Home model={status.data} onRetry={wrap(() => retryComputed(self.loader))} />;
-    if (status.isRejected)
-      return <ErrorPage onRetry={wrap(() => retryComputed(self.loader))} />;
 
     return <LoaderPage />;
   }
@@ -112,8 +114,7 @@ export const profileRoute = authenticatedRoute.reatomRoute({
     const status = self.loader.status();
 
     if (status.data) return <Profile model={status.data} />;
-    if (status.isRejected)
-      return <ErrorPage onRetry={wrap(() => retryComputed(self.loader))} />;
+    if (status.isRejected) return <ErrorPage onRetry={wrap(() => retryComputed(self.loader))} />;
 
     return <LoaderPage />;
   }
@@ -148,8 +149,27 @@ export const historyRoute = authenticatedRoute.reatomRoute({
     const status = self.loader.status();
 
     if (status.data) return <History model={status.data} />;
-    if (status.isRejected)
-      return <ErrorPage onRetry={wrap(() => retryComputed(self.loader))} />;
+    if (status.isRejected) return <ErrorPage onRetry={wrap(() => retryComputed(self.loader))} />;
+
+    return <LoaderPage />;
+  }
+});
+
+export const historyOrderRoute = authenticatedRoute.reatomRoute({
+  path: 'order/:orderId',
+  loader: async ({ orderId }) => {
+    const response = await catchError(() => getApiDeliveryOrderByOrderId({ path: { orderId } }));
+
+    if (response.error) throw response.error;
+
+    return { order: response.result.data.order };
+  },
+  render: (self) => {
+    const status = self.loader.status();
+
+    if (status.data)
+      return <Order model={status.data} onRefetch={wrap(() => retryComputed(self.loader))} />;
+    if (status.isRejected) return <ErrorPage onRetry={wrap(() => retryComputed(self.loader))} />;
 
     return <LoaderPage />;
   }

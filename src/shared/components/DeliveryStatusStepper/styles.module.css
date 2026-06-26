@@ -1,0 +1,25 @@
+.root {
+  width: 320px;
+  max-width: 100%;
+}
+
+/* Dashed connectors instead of Mantine's solid bars */
+.root .separator {
+  height: 0;
+  margin-inline: 8px;
+
+  background: transparent;
+  border-top: 2px dashed var(--stepper-outline-color);
+}
+
+.root .separator[data-active] {
+  border-top-color: var(--stepper-color);
+}
+
+/* The active (in-progress) step is filled like a completed one in the design */
+.stepIcon[data-progress] {
+  color: var(--mantine-color-white);
+
+  background-color: var(--step-color);
+  border-color: var(--step-color);
+}
